@@ -14,11 +14,11 @@ module conv_layer # (parameter KERNEL_SIZE = 3,
                      parameter KDATA_WIDTH = 8,
                      parameter ACTIVATION  = "RELU")
 (
-   input  logic                  clk,
-   input  logic                  rst,
-   input  logic [DATA_WIDTH-1:0] image      [IMGCOL-1] [IMGROW-1],
-   input  logic                  kernel     [KERNEL_SIZE-1] [KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
-   output logic [DATA_WIDTH-1:0] conv_out   [IMGCOL-1] [IMGROW-1]
+   input  logic                   clk,
+   input  logic                   rst,
+   input  logic [DATA_WIDTH-1:0]  image      [IMGROW-1][IMGCOL-1],
+   input  logic [KDATA_WIDTH-1:0] kernel     [KERNEL_SIZE-1] [KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
+   output logic [DATA_WIDTH-1:0]  conv_out
 );
 
 localparam PAD_SIZE = (KERNEL_SIZE-1)/2;
@@ -58,8 +58,8 @@ always_ff@(posedge clk) begin
 end
 
 always_comb begin
-   for (int i; i<KERNEL_SIZE; i=i+1) begin // row iteration
-      for (int j; j<KERNEL_SIZE; j=j+1) begin  // col iteration
+   for (int i=0; i<KERNEL_SIZE; i=i+1) begin // row iteration
+      for (int j=0; j<KERNEL_SIZE; j=j+1) begin  // col iteration
          ker_window[i*KERNEL_SIZE+j] = kernel[i][j];
       end
    end
@@ -77,8 +77,8 @@ always_ff@(posedge clk or negedge rst) begin
           (row<IMGROW-PAD_SIZE && col<IMGCOL-PAD_SIZE)  )  // Bottom Right corners
       begin
          en_convolve <= 1'b1;
-         for (int i; i<KERNEL_SIZE; i=i+1) begin // row iteration
-            for (int j; j<KERNEL_SIZE; j=j+1) begin  // col iteration
+         for (int i=0; i<KERNEL_SIZE; i=i+1) begin // row iteration
+            for (int j=0; j<KERNEL_SIZE; j=j+1) begin  // col iteration
                img_window[i*KERNEL_SIZE+j] <= image[row-PAD_SIZE+i][col-PAD_SIZE+j];
             end
          end
@@ -100,7 +100,7 @@ convolve #(
    .en_convolve  (en_convolve),
    .image        (img_window),
    .kernel       (ker_window),
-   .feature_map  (conv_out[row_q2][col_q2]),
+   .feature_map  (conv_out)
 );
 
 
