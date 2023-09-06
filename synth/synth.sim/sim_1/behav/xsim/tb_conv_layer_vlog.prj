@@ -1,0 +1,11 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../../rtl/conv_layer.sv" \
+"../../../../../rtl/convolve.sv" \
+"../../../../../sim/tb_conv_layer.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

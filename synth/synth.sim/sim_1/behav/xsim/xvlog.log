@@ -1,0 +1,15 @@
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "E:/Documents/EEE-598/CNN_verilog/rtl/conv_layer.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module conv_layer
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "E:/Documents/EEE-598/CNN_verilog/rtl/convolve.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module convolve
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_conv_layer
+WARNING: [VRFC 10-8860] concatenation '{'b011111110,'b0100,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:54]
+WARNING: [VRFC 10-8860] concatenation '{'b0100,'b01,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:55]
+WARNING: [VRFC 10-8860] concatenation '{'b01,'b0110,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:56]
+WARNING: [VRFC 10-8860] concatenation '{'b010,'b0100,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:57]
+WARNING: [VRFC 10-8860] concatenation '{'b0110,'b010,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:58]
+WARNING: [VRFC 10-8860] concatenation '{'b0110,'b01,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:59]
+WARNING: [VRFC 10-8860] concatenation '{'b01,'b010,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:60]
+WARNING: [VRFC 10-8860] concatenation '{'b010,'b011110010}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:61]
+WARNING: [VRFC 10-8860] concatenation '{'b011111100,'b011111110}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:62]

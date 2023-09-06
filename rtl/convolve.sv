@@ -15,9 +15,9 @@ module convolve #(parameter KERNEL_SIZE = 9,
    input  logic                   clk,
    input  logic                   rst,
    input  logic                   en_convolve,
-   input  logic  [DATA_WIDTH-1:0] image       [KERNEL_SIZE-1:0],
-   input  logic [KDATA_WIDTH-1:0] kernel      [KERNEL_SIZE-1:0], // {(sign_bit) + 0.7f} format
-   output logic  [DATA_WIDTH-1:0] feature_map
+   input  logic signed  [DATA_WIDTH-1:0] image       [0:KERNEL_SIZE-1],
+   input  logic signed [KDATA_WIDTH-1:0] kernel      [0:KERNEL_SIZE-1], // {(sign_bit) + 0.7f} format
+   output logic signed [DATA_WIDTH-1:0] feature_map
 );
 
 function [DATA_WIDTH-1:0] activation;
@@ -37,10 +37,10 @@ function [DATA_WIDTH-1:0] activation;
    end
 endfunction
 
-logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_c [KERNEL_SIZE-1:0];
-logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_q [KERNEL_SIZE-1:0];
+logic signed [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_c [0:KERNEL_SIZE-1];
+logic signed [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_q [0:KERNEL_SIZE-1];
 
-logic [DATA_WIDTH+KDATA_WIDTH+$clog2(KERNEL_SIZE)-1:0] feature_map_c;
+logic signed [DATA_WIDTH+KDATA_WIDTH+$clog2(KERNEL_SIZE)-1:0] feature_map_c;
 
 always_comb begin
    feat_mult_c = '{default: 'h0};

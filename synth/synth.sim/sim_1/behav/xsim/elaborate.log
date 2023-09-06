@@ -1,0 +1,28 @@
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_conv_layer_behav xil_defaultlib.tb_conv_layer xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-8860] concatenation '{'b011111110,'b0100,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:54]
+WARNING: [VRFC 10-8860] concatenation '{'b0100,'b01,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:55]
+WARNING: [VRFC 10-8860] concatenation '{'b01,'b0110,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:56]
+WARNING: [VRFC 10-8860] concatenation '{'b010,'b0100,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:57]
+WARNING: [VRFC 10-8860] concatenation '{'b0110,'b010,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:58]
+WARNING: [VRFC 10-8860] concatenation '{'b0110,'b01,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:59]
+WARNING: [VRFC 10-8860] concatenation '{'b01,'b010,'b011111111}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:60]
+WARNING: [VRFC 10-8860] concatenation '{'b010,'b011110010}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:61]
+WARNING: [VRFC 10-8860] concatenation '{'b011111100,'b011111110}' cannot be used within unpacked array concatenation for unpacked type target [E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv:62]
+WARNING: [VRFC 10-3705] select index 18 into 'weighted_inputs' is out of bounds [E:/Documents/EEE-598/CNN_verilog/rtl/convolve.sv:28]
+WARNING: [VRFC 10-3705] select index 7 into 'kernel' is out of bounds [E:/Documents/EEE-598/CNN_verilog/rtl/convolve.sv:48]
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4100] "E:/Documents/EEE-598/CNN_verilog/synth/synth.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "E:/Documents/EEE-598/CNN_verilog/synth/synth.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.convolve(KERNEL_SIZE=4)
+Compiling module xil_defaultlib.conv_layer(KERNEL_SIZE=2,IMGCOL=...
+Compiling module xil_defaultlib.tb_conv_layer
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_conv_layer_behav

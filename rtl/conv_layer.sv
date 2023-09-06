@@ -16,15 +16,15 @@ module conv_layer # (parameter KERNEL_SIZE = 3,
 (
    input  logic                   clk,
    input  logic                   rst,
-   input  logic [DATA_WIDTH-1:0]  image      [IMGROW-1][IMGCOL-1],
-   input  logic [KDATA_WIDTH-1:0] kernel     [KERNEL_SIZE-1] [KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
-   output logic [DATA_WIDTH-1:0]  conv_out
+   input  logic signed [DATA_WIDTH-1:0]  image      [0:IMGROW-1][0:IMGCOL-1],
+   input  logic signed [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
+   output logic signed [DATA_WIDTH-1:0]  conv_out
 );
 
 localparam PAD_SIZE = (KERNEL_SIZE-1)/2;
 
-logic [DATA_WIDTH-1:0]  img_window [KERNEL_SIZE*KERNEL_SIZE-1:0];
-logic [KDATA_WIDTH-1:0] ker_window [KERNEL_SIZE*KERNEL_SIZE-1:0];
+logic signed [DATA_WIDTH-1:0]  img_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
+logic signed [KDATA_WIDTH-1:0] ker_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
 
 logic [$clog2(IMGCOL)-1:0] col, col_q1, col_q2;
 logic [$clog2(IMGROW)-1:0] row, row_q1, row_q2;
