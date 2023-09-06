@@ -71,10 +71,8 @@ always_ff@(posedge clk or negedge rst) begin
       img_window  <= '{default: 'h0};
       en_convolve <= 1'b0;
    end else begin
-      if ((row>PAD_SIZE-1      && col>PAD_SIZE-1)      ||  // Top Left corners
-          (row>PAD_SIZE-1      && col<IMGCOL-PAD_SIZE) ||  // Top Right corners
-          (row<IMGROW-PAD_SIZE && col>PAD_SIZE-1)      ||  // Bottom Left corners
-          (row<IMGROW-PAD_SIZE && col<IMGCOL-PAD_SIZE)  )  // Bottom Right corners
+      if (row>PAD_SIZE-1 && row<IMGROW-PAD_SIZE &&  // Top and Bottom lines
+          col>PAD_SIZE-1 && col<IMGCOL-PAD_SIZE)   // Left and Right lines
       begin
          en_convolve <= 1'b1;
          for (int i=0; i<KERNEL_SIZE; i=i+1) begin // row iteration

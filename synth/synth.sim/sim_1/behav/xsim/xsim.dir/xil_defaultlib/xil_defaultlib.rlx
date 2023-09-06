@@ -1,8 +1,0 @@
-0.7
-2020.2
-Oct 14 2022
-05:20:55
-E:/Documents/EEE-598/CNN_verilog/rtl/conv_layer.sv,1693887691,systemVerilog,,E:/Documents/EEE-598/CNN_verilog/rtl/convolve.sv,,conv_layer,,uvm,,,,,,
-E:/Documents/EEE-598/CNN_verilog/rtl/convolve.sv,1693887677,systemVerilog,,E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv,,convolve,,uvm,,,,,,
-E:/Documents/EEE-598/CNN_verilog/sim/tb_conv_layer.sv,1693886918,systemVerilog,,,,tb_conv_layer,,uvm,,,,,,
-E:/Documents/EEE-598/CNN_verilog/synth/synth.sim/sim_1/behav/xsim/glbl.v,1665704903,verilog,,,,glbl,,uvm,,,,,,

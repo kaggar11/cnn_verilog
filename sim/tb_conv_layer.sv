@@ -3,8 +3,8 @@ module tb_conv_layer();
 
   // parameters
   localparam DUT_CLK_HALF_PER_NS = 5;
-  localparam KERNEL_SIZE = 2;
-  localparam IMGCOL      = 3;
+  localparam KERNEL_SIZE = 3;
+  localparam IMGCOL      = 7;
   localparam IMGROW      = 7;
   localparam DATA_WIDTH  = 8;
   localparam KDATA_WIDTH = 8;
@@ -13,8 +13,8 @@ module tb_conv_layer();
   // variables
   logic dut_clk;
   logic rst;
-  logic signed [DATA_WIDTH-1:0]  image      [0:IMGROW-1] [0:IMGCOL-1];
-  logic signed [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1];
+  logic [DATA_WIDTH-1:0]  image      [0:IMGROW-1] [0:IMGCOL-1];
+  logic [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1];
 
   // instantiate DUT
   conv_layer #(
@@ -51,15 +51,16 @@ module tb_conv_layer();
   end : tb_threads
 
   initial begin : test_thread
-    image = {{'hfe,'h04,'hff}, 
-             {'h04,'h01,'hff}, 
-             {'h01,'h06,'hff}, 
-             {'h02,'h04,'hff}, 
-             {'h06,'h02,'hff}, 
-             {'h06,'h01,'hff}, 
-             {'h01,'h02,'hff}};
-    kernel = {{'h02,'hf2}, 
-              {'hfc,'hfe}};
+    image = {{'hfe,'h04,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h04,'h01,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h01,'h06,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h02,'h04,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h06,'h02,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h06,'h01,'hff,'h05,'hf5,'h02,'hf8}, 
+             {'h01,'h02,'hff,'h05,'hf5,'h02,'hf8}};
+    kernel = {{'h02,'hf2,'h01}, 
+              {'hfc,'hfe,'h01},
+              {'hfc,'hfe,'h01}};
   end : test_thread
  
  endmodule
