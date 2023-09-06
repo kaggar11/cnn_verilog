@@ -15,9 +15,10 @@ module convolve #(parameter KERNEL_SIZE = 9,
    input  logic                   clk,
    input  logic                   rst,
    input  logic                   en_convolve,
-   input  logic signed  [DATA_WIDTH-1:0] image       [0:KERNEL_SIZE-1],
-   input  logic signed [KDATA_WIDTH-1:0] kernel      [0:KERNEL_SIZE-1], // {(sign_bit) + 0.7f} format
-   output logic signed [DATA_WIDTH-1:0] feature_map
+   input  logic  [DATA_WIDTH-1:0] image       [0:KERNEL_SIZE-1],
+   input  logic [KDATA_WIDTH-1:0] kernel      [0:KERNEL_SIZE-1], // {(sign_bit) + 0.7f} format
+   output logic  [DATA_WIDTH-1:0] feature_map,
+   output logic                   feature_out
 );
 
 function [DATA_WIDTH-1:0] activation;
@@ -37,11 +38,14 @@ function [DATA_WIDTH-1:0] activation;
    end
 endfunction
 
-logic signed [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_c [0:KERNEL_SIZE-1];
-logic signed [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_q [0:KERNEL_SIZE-1];
+logic en_convolve_q;
 
-logic signed [DATA_WIDTH+KDATA_WIDTH+$clog2(KERNEL_SIZE)-1:0] feature_map_c;
+logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_c [0:KERNEL_SIZE-1];
+logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_q [0:KERNEL_SIZE-1];
 
+logic [DATA_WIDTH+KDATA_WIDTH+$clog2(KERNEL_SIZE)-1:0] feature_map_c;
+
+// Multiplier
 always_comb begin
    feat_mult_c = '{default: 'h0};
    for (int i=0; i<KERNEL_SIZE; i=i+1) begin
@@ -50,23 +54,37 @@ always_comb begin
    end
 end
 
+// Adder
 always_comb begin
    feature_map_c = '{default: 'h0};
    for (int i=0; i<KERNEL_SIZE; i=i+1) begin
       feature_map_c = feat_mult_q[i][DATA_WIDTH+KDATA_WIDTH-1] ? feature_map_c - feat_mult_q[i]: // sign bit high means subtract
                                                                  feature_map_c + feat_mult_q[i];  // else add
-                                                                 
    end
+end
+
+// delay block
+always_ff@(posedge clk) begin
+   en_convolve_q <= en_convolve;
 end
 
 always_ff@(posedge clk, negedge rst) begin
    if (~rst) begin
       feat_mult_q <= '{default: 'h0};
       feature_map <= 'h0;
+      feature_out <= 1'b0;
    end
-   else if (en_convolve) begin
-      feat_mult_q <= feat_mult_c;
-      feature_map <= activation(feature_map_c); // passing the integer LSBs without fractional part
+   else begin
+      if (en_convolve) begin
+         feat_mult_q <= feat_mult_c;
+      end
+      if (en_convolve_q) begin
+         feature_map <= activation(feature_map_c); // passing the integer LSBs without fractional part
+         feature_out <= 1'b1;
+      end else begin
+         feature_map <= 'h0;
+         feature_out <= 1'b0;
+      end
    end
 end
 

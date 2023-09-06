@@ -16,46 +16,48 @@ module conv_layer # (parameter KERNEL_SIZE = 3,
 (
    input  logic                   clk,
    input  logic                   rst,
-   input  logic signed [DATA_WIDTH-1:0]  image      [0:IMGROW-1][0:IMGCOL-1],
-   input  logic signed [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
-   output logic signed [DATA_WIDTH-1:0]  conv_out
+   input  logic [DATA_WIDTH-1:0]  image      [0:IMGROW-1][0:IMGCOL-1],
+   input  logic [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1],  // {(sign_bit) + 1.6f} format
+   output logic [DATA_WIDTH-1:0]  conv_out   [0:IMGROW-KERNEL_SIZE][0:IMGCOL-KERNEL_SIZE],
+   output logic                   layer_done_out
 );
 
 localparam PAD_SIZE = (KERNEL_SIZE-1)/2;
 
-logic signed [DATA_WIDTH-1:0]  img_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
-logic signed [KDATA_WIDTH-1:0] ker_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
+logic [DATA_WIDTH-1:0]  img_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
+logic [KDATA_WIDTH-1:0] ker_window [0:KERNEL_SIZE*KERNEL_SIZE-1];
 
-logic [$clog2(IMGCOL)-1:0] col, col_q1, col_q2;
-logic [$clog2(IMGROW)-1:0] row, row_q1, row_q2;
+logic [$clog2(IMGCOL)-1:0] col;
+logic [$clog2(IMGROW)-1:0] row;
+logic [$clog2(IMGCOL-KERNEL_SIZE):0] out_col;
+logic [$clog2(IMGROW-KERNEL_SIZE):0] out_row;
 
-logic en_convolve;
+logic en_convolve, layer_conv_done;
+logic [DATA_WIDTH-1:0]  activated_feature;
 
 // ROW and COL counter
 always_ff@(posedge clk or negedge rst) begin
    if (~rst) begin
       row <= 'h0;
       col <= 'h0;
+      layer_conv_done <= 1'b0;
    end
    else begin
-      if (row == IMGROW-1) begin
+      if (row == IMGROW) begin
          row <= 'h0;
          col <= 'h0;
+         layer_conv_done <= 1'b1;
       end else if (col==IMGCOL-1) begin
          row <= row+'h1;
          col <= 'h0;
       end else begin
          col <= col+'h1;
+         layer_conv_done <= 1'b0;
       end
    end
 end
 
-always_ff@(posedge clk) begin
-   row_q1 <= row;
-   row_q2 <= row_q1;
-   col_q1 <= col;
-   col_q2 <= col_q1;
-end
+assign layer_done_out = layer_conv_done;
 
 always_comb begin
    for (int i=0; i<KERNEL_SIZE; i=i+1) begin // row iteration
@@ -87,6 +89,7 @@ always_ff@(posedge clk or negedge rst) begin
    end
 end
 
+// perform convolution on the windowed image
 convolve #(
    .KERNEL_SIZE (KERNEL_SIZE*KERNEL_SIZE),
    .DATA_WIDTH  (DATA_WIDTH),
@@ -98,8 +101,37 @@ convolve #(
    .en_convolve  (en_convolve),
    .image        (img_window),
    .kernel       (ker_window),
-   .feature_map  (conv_out)
+   .feature_map  (activated_feature),
+   .feature_out  (feature_out)
 );
 
+// ROW and COL counter for output image
+// because the size of the output image will be different from the input
+always_ff@(posedge clk or negedge rst) begin
+   if (~rst) begin
+      out_row <= 'h0;
+      out_col <= 'h0;
+   end
+   // added layer_conv_done to get proper results for the next convolution as well.
+   else if (feature_out || layer_conv_done) begin
+      if (out_row == IMGROW-KERNEL_SIZE+1 || layer_conv_done) begin
+         out_row <= 'h0;
+         out_col <= 'h0;
+      end else if (out_col==IMGCOL-KERNEL_SIZE) begin
+         out_row <= out_row+'h1;
+         out_col <= 'h0;
+      end else begin
+         out_col <= out_col+'h1;
+      end
+   end
+end
 
+// assign the outputs at proper location
+always_ff@(posedge clk or negedge rst) begin
+   if (~rst) begin
+      conv_out <= '{default: 'h0};
+   end else begin
+      conv_out[out_row][out_col] <= activated_feature;
+   end
+end
 endmodule
