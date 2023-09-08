@@ -38,7 +38,7 @@ model = torch.load(args["model"]).to(device)
 print("model:\n",model)
 
 def save_image_to_txt(data):
-	f = open("./outputs/sample_kernel.txt", "w")
+	f = open("../sim/sample_kernel.txt", "w")
 	nline_str = '\n'
 	tab_str = '\t'
 	data=data.squeeze(0)
@@ -47,8 +47,11 @@ def save_image_to_txt(data):
 	for x in range(im.shape[0]):
 		for y in range(im.shape[1]):
 			im_ele = int(im[x,y]*256)
-			im_str = str(hex(((abs(im_ele) ^ 0xff) + 1) & 0xff))
-			print("value string:",im_str)
+			if im_ele<0:
+				im_str = str(hex(((abs(im_ele) ^ 0xff) + 1) & 0xff))
+			else:
+				im_str = str(hex((im_ele)))
+			print("value string:",im_ele)
 			f.write(im_str+tab_str)
 		f.write(nline_str)
 	f.close()

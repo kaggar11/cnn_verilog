@@ -35,7 +35,7 @@ TRAIN_SPLIT = 0.75
 VAL_SPLIT = 1 - TRAIN_SPLIT
 
 def save_image_to_txt(data):
-	f = open("./outputs/sample_mnist_image.txt", "w")
+	f = open("../sim/sample_mnist_image.txt", "w")
 	nline_str = '\n'
 	tab_str = '\t'
 	data=data.squeeze(0)
