@@ -1,11 +1,12 @@
-module tb_conv_layer();
+`timescale 1ns/1ps
 
+module tb_conv_layer();
 
   // parameters
   localparam DUT_CLK_HALF_PER_NS = 5;
-  localparam KERNEL_SIZE = 3;
-  localparam IMGCOL      = 7;
-  localparam IMGROW      = 7;
+  localparam KERNEL_SIZE = 5;
+  localparam IMGCOL      = 28;
+  localparam IMGROW      = 28;
   localparam DATA_WIDTH  = 8;
   localparam KDATA_WIDTH = 8;
   localparam ACTIVATION  = "RELU";
@@ -16,6 +17,8 @@ module tb_conv_layer();
   logic [DATA_WIDTH-1:0]  image      [0:IMGROW-1] [0:IMGCOL-1];
   logic [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1];
   logic conv_done;
+  
+  parameter run_time = 8000000; // 1000ps = 1us
 
   // instantiate DUT
   conv_layer #(
@@ -52,6 +55,47 @@ module tb_conv_layer();
       join_none
    end : tb_threads
    
+   //-----------------Task to get Features--------------------//
+   task get_features();
+      int fp0,p;
+      fp0 = $fopen("E:/Documents/EEE-598/CNN_verilog/sim/sample_mnist_image.txt","r");
+      for (int j=0;j<IMGROW;j++) begin
+         for (int i=0;i<IMGCOL;i++) begin
+            p = $fscanf(fp0,"%d\t",image[j][i]);
+            $display("Image[%d][%d]:%d",j,i,image[j][i]);
+         end
+      end
+      $fclose(fp0);
+   endtask
+
+   //-----------------Task to get Weights--------------------//
+   task get_weights();
+      /*$readmemh("E:/Documents/EEE-598/CNN_verilog/sim/sample_kernel.txt", kernel);
+      for (int i=0;i<KERNEL_SIZE;i=i+1) begin
+         for (int j=0;j<KERNEL_SIZE;j=j+1) begin
+         end
+      end*/
+      int fp1,p1;
+      fp1 = $fopen("E:/Documents/EEE-598/CNN_verilog/sim/sample_kernel.txt","r");
+      for (int j=0;j<KERNEL_SIZE;j++) begin
+         for (int i=0;i<KERNEL_SIZE;i++) begin
+            p1 = $fscanf(fp1,"%h\t",kernel[j][i]);
+            $display("Kernel[%d][%d]:%h",j,i,kernel[j][i]);
+         end
+      end
+      $fclose(fp1);
+   endtask
+
+   //-------------------------------------------------------------//
+   //Fetching the values from the text file and generating clock
+   //-------------------------------------------------------------//
+   initial begin
+      get_features(); // Reads the txt file for input matrix
+      get_weights();  // Reads the txt file for weight matrix
+      //get_golden_outputs(); // Reads the golden outputs file
+   end
+
+   /*
    initial begin : test_thread
       image = {{'hfe,'h04,'hff,'h05,'hf5,'h02,'hf8}, 
                {'h04,'h01,'hff,'h05,'hf5,'h02,'hf8}, 
@@ -60,13 +104,20 @@ module tb_conv_layer();
                {'h06,'h02,'hff,'h05,'hf5,'h02,'hf8}, 
                {'h06,'h01,'hff,'h05,'hf5,'h02,'hf8}, 
                {'h01,'h02,'hff,'h05,'hf5,'h02,'hf8}};
-      kernel = {{'h02,'hf2,'h20}, 
+      kernel = {{'h02,'hf2,'h20},
                 {'hfc,'hfe,'h20},
                 {'hfc,'hfe,'h20}};
    end : test_thread
- 
+   */
+   
    initial begin
-      if (conv_done) $finish;
+      finish();
    end
+
+   task finish();
+      #(run_time);
+      $display("!!!!!!!!!!!!!!!!!!!!!!!END OF TB!!!!!!!!!!!!!!!!!!!!!!!!!!!!");      
+      $finish(1);
+   endtask
 
  endmodule
