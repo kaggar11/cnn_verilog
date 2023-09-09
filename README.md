@@ -9,3 +9,10 @@ The current TODO list inlcudes:
 2. Implement a python code for the same to provide inputs to the verilog code and compare the outputs 
 3. Develop a more strong testbench that can compare the outputs by itself
 4. Create and test a Neural Network Model based on it
+
+
+# Dataflow
+
+This section explains the dataflow of the computations in convolution.
+
+![MAC_OPS](./docs/convolution_dataflow.jpg)

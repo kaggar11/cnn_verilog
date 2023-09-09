@@ -99,7 +99,7 @@ module tb_conv_layer();
                $fwrite(fp2,"\n");
             end
             $fclose(fp2);
-            $finish;
+            finish();
          end
       end
    end
@@ -127,13 +127,13 @@ module tb_conv_layer();
                 {'hfc,'hfe,'h20}};
    end : test_thread
    */
-   
+
    initial begin
-      finish();
+      //finish();
    end
 
    task finish();
-      #(run_time)
+      //#(run_time)
       $display("!!!!!!!!!!!!!!!!!!!!!!!END OF TB!!!!!!!!!!!!!!!!!!!!!!!!!!!!");      
       $finish(1);
    endtask
