@@ -16,6 +16,7 @@ module tb_conv_layer();
   logic rst;
   logic [DATA_WIDTH-1:0]  image      [0:IMGROW-1] [0:IMGCOL-1];
   logic [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1];
+  logic [DATA_WIDTH-1:0]  conv_out   [0:IMGROW-KERNEL_SIZE][0:IMGCOL-KERNEL_SIZE];
   logic conv_done;
   
   parameter run_time = 8000000; // 1000ps = 1us
@@ -33,7 +34,7 @@ module tb_conv_layer();
     .rst             ( rst       ), // 
     .image           ( image     ), // 
     .kernel          ( kernel    ), // 
-    .conv_out        (           ),
+    .conv_out        ( conv_out  ),
     .layer_done_out  ( conv_done )
   );
 
@@ -62,7 +63,7 @@ module tb_conv_layer();
       for (int j=0;j<IMGROW;j++) begin
          for (int i=0;i<IMGCOL;i++) begin
             p = $fscanf(fp0,"%d\t",image[j][i]);
-            $display("Image[%d][%d]:%d",j,i,image[j][i]);
+            //$display("Image[%d][%d]:%d",j,i,image[j][i]);
          end
       end
       $fclose(fp0);
@@ -70,21 +71,38 @@ module tb_conv_layer();
 
    //-----------------Task to get Weights--------------------//
    task get_weights();
-      /*$readmemh("E:/Documents/EEE-598/CNN_verilog/sim/sample_kernel.txt", kernel);
-      for (int i=0;i<KERNEL_SIZE;i=i+1) begin
-         for (int j=0;j<KERNEL_SIZE;j=j+1) begin
-         end
-      end*/
       int fp1,p1;
       fp1 = $fopen("E:/Documents/EEE-598/CNN_verilog/sim/sample_kernel.txt","r");
       for (int j=0;j<KERNEL_SIZE;j++) begin
          for (int i=0;i<KERNEL_SIZE;i++) begin
             p1 = $fscanf(fp1,"%h\t",kernel[j][i]);
-            $display("Kernel[%d][%d]:%h",j,i,kernel[j][i]);
+            //$display("Kernel[%d][%d]:%h",j,i,kernel[j][i]);
          end
       end
       $fclose(fp1);
    endtask
+
+   //--------------Block to write Conv Output-----------------//
+   initial begin
+      int fp2,p2;
+      fp2 = $fopen("E:/Documents/EEE-598/CNN_verilog/sim/output.txt","w");
+      
+      // keep on checking at each posedge of clk if conv is done
+      forever begin
+      @(posedge dut_clk);
+         if(conv_done) begin
+            for (int j=0;j<IMGROW-KERNEL_SIZE+1;j++) begin
+               for (int i=0;i<IMGCOL-KERNEL_SIZE+1;i++) begin
+                  $fwrite(fp2,"%d\t",conv_out[j][i]);
+                  $display("conv_out[%d][%d]:%h",j,i,conv_out[j][i]);
+               end
+               $fwrite(fp2,"\n");
+            end
+            $fclose(fp2);
+            $finish;
+         end
+      end
+   end
 
    //-------------------------------------------------------------//
    //Fetching the values from the text file and generating clock
@@ -115,7 +133,7 @@ module tb_conv_layer();
    end
 
    task finish();
-      #(run_time);
+      #(run_time)
       $display("!!!!!!!!!!!!!!!!!!!!!!!END OF TB!!!!!!!!!!!!!!!!!!!!!!!!!!!!");      
       $finish(1);
    endtask
