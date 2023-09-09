@@ -6,7 +6,7 @@ Currently, this code doesn't consider padding and striding. The implementation i
 
 The current TODO list inlcudes:
 1. Add feature for padding and stride
-2. Implement a python code for the same to provide inputs to the verilog code and compare the outputs 
+2. Implement a python code to compare the outputs
 3. Develop a more strong testbench that can compare the outputs by itself
 4. Create and test a Neural Network Model based on it
 
@@ -14,5 +14,11 @@ The current TODO list inlcudes:
 # Dataflow
 
 This section explains the dataflow of the computations in convolution.
+
+The data is extracted from channel and kernel matrices in the Toeplitz Matrix format.
+
+![MAC_OPS](./docs/architecture.jpg)
+
+MAC operation is then performed on the two matrices shown in figure below.
 
 ![MAC_OPS](./docs/convolution_dataflow.jpg)
