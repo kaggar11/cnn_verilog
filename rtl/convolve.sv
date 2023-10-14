@@ -38,6 +38,11 @@ function [DATA_WIDTH-1:0] activation;
    end
 endfunction
 
+function [KDATA_WIDTH-1:0] twos_compl;
+   input [KDATA_WIDTH-1:0] kernel;
+   twos_compl = (~kernel) + 1;
+endfunction
+
 logic en_convolve_q;
 
 logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_c [0:KERNEL_SIZE-1];
@@ -45,12 +50,20 @@ logic [DATA_WIDTH+KDATA_WIDTH-1:0] feat_mult_q [0:KERNEL_SIZE-1];
 
 logic [DATA_WIDTH+KDATA_WIDTH+$clog2(KERNEL_SIZE)-1:0] feature_map_c;
 
+logic [KDATA_WIDTH-1:0] kernel_abs [0:KERNEL_SIZE-1];
+
+always_comb begin
+   for (int i=0;i<KERNEL_SIZE; i=i+1) begin
+      kernel_abs[i] = kernel[i][KDATA_WIDTH-1] ? twos_compl(kernel[i]) : kernel[i]; // get the absolute values for kernel
+   end
+end
+
 // Multiplier
 always_comb begin
    feat_mult_c = '{default: 'h0};
    for (int i=0; i<KERNEL_SIZE; i=i+1) begin
-      feat_mult_c[i][DATA_WIDTH+KDATA_WIDTH-1]     = kernel[KDATA_WIDTH-1];               // sign bit
-      feat_mult_c[i][DATA_WIDTH+KDATA_WIDTH-2:0]   = image[i]*kernel[i][KDATA_WIDTH-2:0]; // rest of the bits multiplied
+      feat_mult_c[i][DATA_WIDTH+KDATA_WIDTH-1]     = kernel[i][KDATA_WIDTH-1];                // pass the sign bit
+      feat_mult_c[i][DATA_WIDTH+KDATA_WIDTH-2:0]   = image[i]*kernel_abs[i][KDATA_WIDTH-2:0]; // multiply the abs values
    end
 end
 

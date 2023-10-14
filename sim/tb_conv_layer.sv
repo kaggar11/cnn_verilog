@@ -1,15 +1,16 @@
 `timescale 1ns/1ps
 
 module tb_conv_layer();
-
+  
   // parameters
-  localparam DUT_CLK_HALF_PER_NS = 5;
-  localparam KERNEL_SIZE = 5;
-  localparam IMGCOL      = 28;
-  localparam IMGROW      = 28;
-  localparam DATA_WIDTH  = 8;
-  localparam KDATA_WIDTH = 8;
-  localparam ACTIVATION  = "RELU";
+  parameter run_time             = 8_000_000; // ps
+  parameter DUT_CLK_HALF_PER_NS  = 5;
+  parameter KERNEL_SIZE          = 5;
+  parameter IMGCOL               = 28;
+  parameter IMGROW               = 28;
+  parameter DATA_WIDTH           = 8;
+  parameter KDATA_WIDTH          = 8;
+  parameter ACTIVATION           = "RELU";
   
   // variables
   logic dut_clk;
@@ -18,8 +19,6 @@ module tb_conv_layer();
   logic [KDATA_WIDTH-1:0] kernel     [0:KERNEL_SIZE-1] [0:KERNEL_SIZE-1];
   logic [DATA_WIDTH-1:0]  conv_out   [0:IMGROW-KERNEL_SIZE][0:IMGCOL-KERNEL_SIZE];
   logic conv_done;
-  
-  parameter run_time = 8000000; // 1000ps = 1us
 
   // instantiate DUT
   conv_layer #(
