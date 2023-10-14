@@ -6,11 +6,9 @@ Currently, this code doesn't consider padding and striding. The implementation i
 
 The current TODO list includes:
 - [x] Implement Python code to generate input stimulus
-- [ ] Add feature for padding and stride
-- [ ] Implement a Python code to compare the outputs
-- [ ] Develop a more strong testbench that can compare the outputs by itself
+- [ ] Add support for padding and stride
+- [ ] Develop a testbench to compare the outputs
 - [ ] Create and test a Neural Network Model based on it
-
 
 # Dataflow
 
