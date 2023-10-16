@@ -21,3 +21,29 @@ The data is extracted from channel and kernel matrices in the Toeplitz Matrix fo
 MAC operation is then performed on the two matrices shown in the figure below.
 
 ![MAC_OPS](./docs/convolution_dataflow.jpg)
+
+# Running Simulation
+
+The testbench file is in the *sim* folder. The scripts to run modelsim simulations are in the *mmodelsim* folder.
+
+Commands to run RTL Simulations:
+```
+cd modelsim
+bash tb_conv_layer.sh
+```
+
+# Running Synthesis
+
+The design has been synthesized using ASU's 7nm PDK. Commands to run synthesis using Synopsys Design Compiler:
+```
+cd synth
+bash synth.tcl
+```
+
+# Running Gate-Level Simulations
+
+Commands to run Gate-Level simulations:
+```
+cd modelsim
+bash tb_conv_layer -sim_type gls
+```
