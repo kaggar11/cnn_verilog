@@ -37,7 +37,7 @@ bash tb_conv_layer.sh
 The design has been synthesized using ASU's 7nm PDK. Commands to run synthesis using Synopsys Design Compiler:
 ```
 cd synth
-bash synth.tcl
+dc_shell -f synth.tcl -output_log_file syn.log
 ```
 
 # Running Gate-Level Simulations
