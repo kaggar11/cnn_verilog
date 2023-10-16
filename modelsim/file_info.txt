@@ -1,0 +1,4 @@
+conv_layer.sv,systemverilog,xil_defaultlib,../rtl/conv_layer.sv,
+convolve.sv,systemverilog,xil_defaultlib,../rtl/convolve.sv,
+tb_conv_layer.sv,systemverilog,xil_defaultlib,../sim/tb_conv_layer.sv,
+glbl.v,Verilog,xil_defaultlib,glbl.v
