@@ -10,7 +10,7 @@ The current TODO list includes:
 - [ ] Develop a testbench to compare the outputs
 - [ ] Create and test a Neural Network Model based on it
 
-The direction of this repo has pivoted. This repo will now focus on development of an FFT-OVA based CNN hardware accelerator.
+The direction of this repo has pivoted. ***This repo will now focus on development of an FFT-OVA based CNN hardware accelerator.***
 
 # Dataflow
 
@@ -18,7 +18,7 @@ This section explains the data flow of the computations in convolution.
 
 The data is extracted from channel and kernel matrices in the Toeplitz Matrix format.
 
-![MAC_OPS](./docs/architecture.jpg)
+![ARCH](./docs/architecture.jpg)
 
 MAC operation is then performed on the two matrices shown in the figure below.
 
@@ -26,12 +26,12 @@ MAC operation is then performed on the two matrices shown in the figure below.
 
 # Running Simulation
 
-The testbench file is in the *sim* folder. The scripts to run modelsim simulations are in the *mmodelsim* folder.
+The testbench file is in the *sim* folder. The scripts to run modelsim simulations are in the *modelsim* folder.
 
 Commands to run RTL Simulations:
 ```
 cd modelsim
-bash tb_conv_layer.sh
+bash tb_conv_layer.sh -sim_type rtl
 ```
 
 # Running Synthesis
@@ -49,15 +49,3 @@ Commands to run Gate-Level simulations:
 cd modelsim
 bash tb_conv_layer -sim_type gls
 ```
-
-# Citations
-
-The papers used as reference are cited below:
-
----
-T. Highlander and A. Rodriguez, “Very efficient training of convolutional neural networks using fast fourier transform and overlap-and-add,” CoRR, Jan. 2016
-
-Saeed, Ahmed, et al. "Efficient FPGA implementation of FFT/IFFT processor." International Journal of circuits, systems and signal processing 3.3 (2009): 103-110.
-
-Liang, Yun, et al. "Evaluating fast algorithms for convolutional neural networks on FPGAs." IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems 39.4 (2019): 857-870
----

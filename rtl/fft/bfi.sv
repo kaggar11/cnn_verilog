@@ -55,3 +55,5 @@ always_ff @(posedge clk, negedge rst) begin
       cntr_read_q  <= cntr_read_c;
    end
 end
+
+endmodule
