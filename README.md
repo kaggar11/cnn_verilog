@@ -26,12 +26,12 @@ MAC operation is then performed on the two matrices shown in the figure below.
 
 # Running Simulation
 
-The testbench file is in the *sim* folder. The scripts to run modelsim simulations are in the *modelsim* folder.
+The testbench files are in the *tests* folder. The scripts to run modelsim simulations are in the *modelsim* folder.
 
 Commands to run RTL Simulations:
 ```
 cd modelsim
-bash tb_conv_layer.sh -sim_type rtl
+bash runsim.sh -sim_type rtl
 ```
 
 # Running Synthesis
@@ -47,7 +47,7 @@ dc_shell -f synth.tcl -output_log_file syn.log
 Commands to run Gate-Level simulations:
 ```
 cd modelsim
-bash tb_conv_layer -sim_type gls
+bash runsim.sh -sim_type gls
 ```
 
 ## References

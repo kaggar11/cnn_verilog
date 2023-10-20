@@ -24,35 +24,35 @@ module bfi # (
 logic [DATA_WIDTH-1:0] feedback_regs_re [0:DEPTH-1];
 logic [DATA_WIDTH-1:0] feedback_regs_im [0:DEPTH-1];
 
-logic [$clog2(DEPTH)-1:0] cntr_write_c, cntr_write_q;
-logic [$clog2(DEPTH)-1:0] cntr_read_c, cntr_read_q;
+logic [$clog2(DEPTH)-1:0] cntr_write_q, cntr_read_q;
 
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       feedback_regs_re <= '{default: 'h0};
       feedback_regs_im <= '{default: 'h0};
-   end else begin
+   end else if (en) begin
       if (control_bit) begin
          b_re <= a_re + feedback_regs_re[cntr_read_q];
          b_im <= a_im + feedback_regs_im[cntr_read_q];
-      end else if (en) begin
+      end else begin
          feedback_regs_re[cntr_write_q] <= a_re;
          feedback_regs_im[cntr_write_q] <= a_im;
       end
    end
 end
 
-// both read/write begin from 0 with an increment of one. FIFO-like implementation of feedback_regs*
-assign cntr_write_c = (control_bit & en) ? 'h0 : cntr_write_q + 1'b1; // when control=0, we are filling the feedback_regs*
-assign cntr_read_c  = (control_bit & en)? cntr_read_q + 1'b1 : 'h0;  // when control=1, we are reading from the feedback_regs*
-
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       cntr_write_q <= 'h0;
       cntr_read_q  <= 'h0;
    end else if (en) begin
-      cntr_write_q <= cntr_write_c;
-      cntr_read_q  <= cntr_read_c;
+      if (~control_bit) begin // when control=0, we are filling the feedback_regs*
+         cntr_write_q <= cntr_write_q + 1'b1;
+         cntr_read_q  <= 'h0;
+      end else begin // when control=1, we are reading from the feedback_regs*
+         cntr_read_q  <= cntr_read_q + 1'b1;
+         cntr_write_q <= 'h0;
+      end
    end
 end
 

@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 
 module tb_conv_layer();
   
@@ -58,7 +58,7 @@ module tb_conv_layer();
    //-----------------Task to get Features--------------------//
    task get_features();
       int fp0,p;
-      fp0 = $fopen("../sim/sample_mnist_image.txt","r");
+      fp0 = $fopen("../tests/inputs/sample_mnist_image.txt","r");
       for (int j=0;j<IMGROW;j++) begin
          for (int i=0;i<IMGCOL;i++) begin
             p = $fscanf(fp0,"%d\t",image[j][i]);
@@ -71,7 +71,7 @@ module tb_conv_layer();
    //-----------------Task to get Weights--------------------//
    task get_weights();
       int fp1,p1;
-      fp1 = $fopen("../sim/sample_kernel.txt","r");
+      fp1 = $fopen("../tests/inputs/sample_kernel.txt","r");
       for (int j=0;j<KERNEL_SIZE;j++) begin
          for (int i=0;i<KERNEL_SIZE;i++) begin
             p1 = $fscanf(fp1,"%h\t",kernel[j][i]);
@@ -84,7 +84,7 @@ module tb_conv_layer();
    //--------------Block to write Conv Output-----------------//
    initial begin
       int fp2,p2;
-      fp2 = $fopen("../sim/output.txt","w");
+      fp2 = $fopen("../tests/outputs/output.txt","w");
       
       // keep on checking at each posedge of clk if conv is done
       forever begin
