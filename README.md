@@ -12,7 +12,7 @@ The current TODO list includes:
 
 The direction of this repo has pivoted. ***This repo will now focus on development of an FFT-OVA based CNN hardware accelerator.*** [[1]](#1) [[2]](#2) [[3]](#3)
 
-# Dataflow
+## Dataflow
 
 This section explains the data flow of the computations in convolution.
 
@@ -24,7 +24,7 @@ MAC operation is then performed on the two matrices shown in the figure below.
 
 ![MAC_OPS](./docs/convolution_dataflow.jpg)
 
-# Running Simulation
+## Running Simulation
 
 The testbench files are in the *tests* folder. The scripts to run modelsim simulations are in the *modelsim* folder.
 
@@ -34,7 +34,12 @@ cd modelsim
 bash runsim.sh -sim_type rtl
 ```
 
-# Running Synthesis
+To specify the test to run, add the test bench module name. Example below:
+```
+bash runsim.sh -sim_type rtl -top tb_radix22_top
+```
+
+## Running Synthesis
 
 The design has been synthesized using ASU's 7nm PDK. Commands to run synthesis using Synopsys Design Compiler:
 ```
@@ -42,13 +47,15 @@ cd synth
 dc_shell -f synth.tcl -output_log_file syn.log
 ```
 
-# Running Gate-Level Simulations
+## Running Gate-Level Simulations
 
 Commands to run Gate-Level simulations:
 ```
 cd modelsim
 bash runsim.sh -sim_type gls
 ```
+
+The argument to specify the test is the same.
 
 ## References
 
