@@ -9,7 +9,8 @@
 
 module bfi # (
    parameter DATA_WIDTH=16,
-   parameter DEPTH=4         
+   parameter N_POINTS=16,
+   parameter STAGE=4                             // Stage of the module to find the depth for Buffers
 )(
    input clk,
    input rst,
@@ -21,10 +22,12 @@ module bfi # (
    output logic [DATA_WIDTH-1:0] b_im            // imaginary part of output data
 );
 
-logic [DATA_WIDTH-1:0] feedback_regs_re [0:DEPTH-1];
-logic [DATA_WIDTH-1:0] feedback_regs_im [0:DEPTH-1];
+localparam BUF_SIZE = N_POINTS/(1<<(2*STAGE+1)); // Total FIFO/Buffer Size Needed
 
-logic [$clog2(DEPTH)-1:0] cntr_write_q, cntr_read_q;
+logic [DATA_WIDTH-1:0] feedback_regs_re [0:BUF_SIZE-1];
+logic [DATA_WIDTH-1:0] feedback_regs_im [0:BUF_SIZE-1];
+
+logic [$clog2(BUF_SIZE)-1:0] cntr_write_q, cntr_read_q;
 
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin

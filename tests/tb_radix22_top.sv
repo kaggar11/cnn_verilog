@@ -1,33 +1,30 @@
 `timescale 1ns/1ns
 
-module tb_bfi();
+module tb_radix22_top();
 
   // parameters
   parameter RUN_TIME             = 1_000; // ps
   parameter DUT_CLK_HALF_PER_NS  = 5;
   parameter DATA_WIDTH           = 16;
   parameter N_POINTS             = 16;
-  parameter STAGE                = 2;
 
   // variables
   logic dut_clk;
   logic rst;
-  logic control_bit, en;
+  logic en;
   logic [DATA_WIDTH-1:0] a_re;
   logic [DATA_WIDTH-1:0] a_im;
   logic [DATA_WIDTH-1:0] b_re;
   logic [DATA_WIDTH-1:0] b_im;
   
   // instantiate DUT
-  bfi #(
+  radix22_top #(
     .DATA_WIDTH      (DATA_WIDTH),
-    .N_POINTS        (N_POINTS),
-    .STAGE           (STAGE)        // The stage we are trying to simulate
-  ) x_bfi (
+    .N_POINTS        (N_POINTS)
+  ) x_radix22_top (
     .clk             ( dut_clk   ), // 100 MHz for Basys3
     .rst             ( rst       ), // 
     .en              ( en        ), // 
-    .control_bit     ( control_bit), // 
     .a_re            ( a_re      ), // 
     .a_im            ( a_im      ), // 
     .b_re            ( b_re      ), // 
@@ -61,7 +58,6 @@ module tb_bfi();
       a_im='h0;
       #(2*DUT_CLK_HALF_PER_NS * 1ns);
       @(posedge dut_clk);
-      control_bit=0;
       a_re=$urandom();
       a_im=$urandom();
 
@@ -78,7 +74,6 @@ module tb_bfi();
       a_im=$urandom();
 
       @(posedge dut_clk);
-      control_bit=1;
       a_re=$urandom();
       a_im=$urandom();
 
@@ -98,8 +93,8 @@ module tb_bfi();
    initial begin
       forever begin
       @(posedge dut_clk);
-         $display("[REAL_OUT] b_re:%h",b_re);
-         $display("[IMAG_OUT] b_im:%h",b_im);
+         $display("[REAL_OUT] time:%0d, b_re:%h",$time, b_re);
+         $display("[IMAG_OUT] time:%0d, b_im:%h",$time, b_im);
       end
    end
 
