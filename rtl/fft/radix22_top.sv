@@ -71,7 +71,6 @@ generate
       // bfi initialization
       bfi #(
         .DATA_WIDTH      (DATA_WIDTH),
-        // .DEPTH           (N_POINTS/(1<<(2*stage+1)))
         .N_POINTS        (N_POINTS),
         .STAGE           (stage)
       ) u_bfi (
@@ -86,17 +85,16 @@ generate
       );
       
       // bfii initialization
-      bfi #(
-      // bfi #(
+      bfii #(
         .DATA_WIDTH      (DATA_WIDTH),
-        // .DEPTH           (N_POINTS/(1<<(2*stage+2)))
         .N_POINTS        (N_POINTS),
         .STAGE           (stage)
       ) u_bfii (
         .clk             (clk),
         .rst             (rst),
         .en              (en),
-        .control_bit     (control_bus[LOG2N_BITS-1-2*stage-1]),
+        .control1_bit    (control_bus[LOG2N_BITS-1-2*stage]),
+        .control2_bit    (control_bus[LOG2N_BITS-1-2*stage-1]),
         .a_re            (bfii_a_re_in[stage]),
         .a_im            (bfii_a_im_in[stage]),
         .b_re            (bfii_b_re_out[stage]),

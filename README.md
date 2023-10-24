@@ -12,7 +12,7 @@ The current TODO list includes:
 
 The direction of this repo has pivoted. ***This repo will now focus on development of an FFT-OVA based CNN hardware accelerator.*** [[1]](#1) [[2]](#2) [[3]](#3)
 
-## Dataflow
+## Dataflow for Standard Convolution
 
 This section explains the data flow of the computations in convolution.
 
@@ -23,6 +23,8 @@ The data is extracted from channel and kernel matrices in the Toeplitz Matrix fo
 MAC operation is then performed on the two matrices shown in the figure below.
 
 ![MAC_OPS](./docs/convolution_dataflow.jpg)
+
+## Dataflow for FFT-OVA based Convolution
 
 ## Running Simulation
 
