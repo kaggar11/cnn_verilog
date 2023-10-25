@@ -16,11 +16,15 @@ module log2n_cntr # (
    output logic [LOG2N_BITS-1:0] control_bus            // output control bus to all modules' MUXs
 );
 
+logic [LOG2N_BITS-1:0] control_c;
+
+assign control_c = (en) ? control_bus + 1'b1 : control_bus;
+
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       control_bus <= 'h0;
    end else if (en) begin
-      control_bus <= control_bus + 1'b1;
+      control_bus <= control_c;
    end
 end
 

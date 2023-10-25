@@ -31,10 +31,13 @@ localparam COS_THETA = 16'h5678;
 logic [LOG2N_BITS-1:0] control_bus;
 logic [DATA_WIDTH-1:0] bfi_a_re_in [0:LOG4N_BITS];
 logic [DATA_WIDTH-1:0] bfi_a_im_in [0:LOG4N_BITS];
+logic                  bfi_a_val [0:LOG4N_BITS-1];
+logic                  bfi_b_val [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfi_b_re_out [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfi_b_im_out [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfii_a_re_in [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfii_a_im_in [0:LOG4N_BITS-1];
+logic                  bfii_b_val [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfii_b_re_out [0:LOG4N_BITS-1];
 logic [DATA_WIDTH-1:0] bfii_b_im_out [0:LOG4N_BITS-1];
 
@@ -57,6 +60,7 @@ log2n_cntr #(
 always_comb begin
    bfi_a_re_in[0] = a_re;
    bfi_a_im_in[0] = a_im;
+   bfi_a_val[0] = 1'b1;
    for (int st=0; st<LOG4N_BITS; st++) begin
       bfii_a_re_in[st] = bfi_b_re_out[st];
       bfii_a_im_in[st] = bfi_b_im_out[st];
@@ -76,10 +80,11 @@ generate
       ) u_bfi (
         .clk             (clk),
         .rst             (rst),
-        .en              (en),
+        .en              (en && bfi_a_val[stage]),
         .control_bit     (control_bus[LOG2N_BITS-1-2*stage]),
         .a_re            (bfi_a_re_in[stage]),
         .a_im            (bfi_a_im_in[stage]),
+        .b_val           (bfi_b_val[stage]),
         .b_re            (bfi_b_re_out[stage]),
         .b_im            (bfi_b_im_out[stage])
       );
@@ -92,11 +97,12 @@ generate
       ) u_bfii (
         .clk             (clk),
         .rst             (rst),
-        .en              (en),
+        .en              (en && bfi_b_val[stage]),
         .control1_bit    (control_bus[LOG2N_BITS-1-2*stage]),
         .control2_bit    (control_bus[LOG2N_BITS-1-2*stage-1]),
         .a_re            (bfii_a_re_in[stage]),
         .a_im            (bfii_a_im_in[stage]),
+        .b_val           (bfii_b_val[stage]),
         .b_re            (bfii_b_re_out[stage]),
         .b_im            (bfii_b_im_out[stage])
       );
@@ -107,11 +113,12 @@ generate
       ) u_tfm (
         .clk             (clk),
         .rst             (rst),
-        .en              (en),
+        .en              (en && bfii_b_val[stage]),
         .sin_theta       (SIN_THETA),
         .cos_theta       (COS_THETA),
         .data_re         (bfii_b_re_out[stage]),
         .data_im         (bfii_b_im_out[stage]),
+        .out_val         (bfi_a_val[stage+1]),
         .out_re          (bfi_a_re_in[stage+1]),
         .out_im          (bfi_a_im_in[stage+1])
       );

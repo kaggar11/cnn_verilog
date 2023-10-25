@@ -18,9 +18,11 @@ module tfm # (
    input [DATA_WIDTH-1:0] data_re,
    input [DATA_WIDTH-1:0] data_im,
    output logic [DATA_WIDTH-1:0] out_re,
-   output logic [DATA_WIDTH-1:0] out_im
+   output logic [DATA_WIDTH-1:0] out_im,
+   output logic                  out_val
 );
 
+logic en_q;
 logic [2*DATA_WIDTH-1:0] sin_re_c, sin_re_q;
 logic [2*DATA_WIDTH-1:0] cos_re_c, cos_re_q;
 logic [2*DATA_WIDTH-1:0] sin_im_c, sin_im_q;
@@ -38,22 +40,35 @@ assign cos_re_c = cos_theta*data_re;
 assign add_re_c = sin_re_q - cos_im_q;
 assign sub_im_c = sin_im_q + cos_re_q;
 
+always_ff@(posedge clk) begin
+   en_q <= en;
+end
+
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       sin_re_q <= 'h0;
       cos_re_q <= 'h0;
       sin_im_q <= 'h0;
       cos_im_q <= 'h0;
-      add_re_q <= 'h0;
-      sub_im_q <= 'h0;
    end else if (en) begin
       sin_re_q <= sin_im_c;
       cos_re_q <= sin_re_c;
       sin_im_q <= cos_im_c;
       cos_im_q <= cos_re_c;
+   end
+end
+
+always_ff @(posedge clk, negedge rst) begin
+   if (~rst) begin
+      add_re_q <= 'h0;
+      sub_im_q <= 'h0;
+      out_val  <= 1'b0;
+   end else if (en_q) begin
       add_re_q <= add_re_c[DATA_WIDTH-1:0];
       sub_im_q <= sub_im_c[DATA_WIDTH-1:0];
-   end
+      out_val  <= 1'b1;
+   end else
+      out_val  <= 1'b0;
 end
 
 assign out_re = add_re_q;
