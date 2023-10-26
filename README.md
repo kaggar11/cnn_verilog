@@ -26,6 +26,20 @@ MAC operation is then performed on the two matrices shown in the figure below.
 
 ## Dataflow for FFT-OVA based Convolution
 
+This section explains the architecture of the Radix-2^2 FFT design.[[2]](#2).
+
+![RAD](./docs/fft_arch.jpg)
+
+The architecture has log4(N) stages with each stages having two butterfly structures.
+
+The first butterfly structure is explained below.
+
+![BFI](./docs/bfi.jpg)
+
+The figure shows the Butterfly-II structure to perform multiplications with '-j'
+
+![BFII](./docs/bfii.jpg)
+
 ## Running Simulation
 
 The testbench files are in the *tests* folder. The scripts to run modelsim simulations are in the *modelsim* folder.
