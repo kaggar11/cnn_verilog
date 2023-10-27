@@ -40,6 +40,10 @@ The figure shows the Butterfly-II structure to perform multiplications with '-j'
 
 ![BFII](./docs/bfii.jpg)
 
+The waveform below shows the dataflow in a butterfly-1 structure for an 8-point FFT.
+
+![BFI_WF](./docs/bfi_wf.png)
+
 ## Running Simulation
 
 The testbench files are in the *tests* folder. The scripts to run modelsim simulations are in the *modelsim* folder.

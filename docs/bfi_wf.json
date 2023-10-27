@@ -1,0 +1,15 @@
+{signal: [
+  {name: 'clk', wave: 'p.........|.'},
+  {name: 'dat', wave: 'x========x|.', data: ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7']},
+  {name: 'buf_dat', wave: 'x========x|.', data: ['d0', 'd1', 'd2', 'd3', 'd0+d4', 'd1+d5', 'd2+d6', 'd3+d7']},
+  {name: 'buf_wr', wave: '01.......0|.'},
+  {name: 'wr_cntr', wave: 'x=========|x', data: ['0', '1', '2', '3', '0', '1', '2', '3', '0']},
+  {name: 'buf_rd', wave: '0....1.....|'},
+  {name: 'rd_cntr', wave: 'x....=====x|', data: ['0', '1', '2', '3', '0']},
+  {name: 'output', wave: 'x....=====x|', data: ['d0-d4', 'd1-d5', 'd2-d6', 'd3-d7', 'd0+d4']}
+],
+ head:{
+   text:'Butterfly-1 Dataflow'
+ },
+ config: { hscale: 2 }
+}
