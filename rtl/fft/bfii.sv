@@ -8,18 +8,18 @@
 /////////////////////////////////////////////////
 
 module bfii # (
-   parameter DATA_WIDTH=16,
-   parameter N_POINTS=16,
-   parameter STAGE=4                               // Stage of the module to find the depth for Buffers
+   parameter DATA_WIDTH     = 16,
+   parameter N_POINTS       = 16,
+   parameter STAGE          = 4                          // Stage of the module to find the depth for Buffers
 )(
-   input                   clk,
-   input                   rst,
-   input                   en,
-   input                   control1_bit,           // 0-fill buffer, 1-add/subtract output
-   input                   control2_bit,           // 0-fill buffer, 1-add/subtract output
-   input  [DATA_WIDTH-1:0] a_re,                   // real part of input data
-   input  [DATA_WIDTH-1:0] a_im,                   // imaginary part of input data
-   output logic                  b_val,
+   input                         clk,
+   input                         rst,
+   input                         en,
+   input                         control1_bit,           // 0-fill buffer, 1-add/subtract output
+   input                         control2_bit,           // 0-fill buffer, 1-add/subtract output
+   input  [DATA_WIDTH-1:0]       a_re,                   // real part of input data
+   input  [DATA_WIDTH-1:0]       a_im,                   // imaginary part of input data
+   output logic                  b_val,                  // Output is valid flag
    output logic [DATA_WIDTH-1:0] b_re,                   // real part of output data
    output logic [DATA_WIDTH-1:0] b_im                    // imaginary part of output data
 );
