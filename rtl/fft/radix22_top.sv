@@ -29,17 +29,17 @@ localparam SIN_THETA = 16'h1234;
 localparam COS_THETA = 16'h5678;
 
 logic [LOG2N_BITS-1:0] control_bus;
-logic [DATA_WIDTH-1:0] bfi_a_re_in [0:LOG4N_BITS];
-logic [DATA_WIDTH-1:0] bfi_a_im_in [0:LOG4N_BITS];
-logic                  bfi_a_val [0:LOG4N_BITS-1];
-logic                  bfi_b_val [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfi_b_re_out [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfi_b_im_out [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfii_a_re_in [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfii_a_im_in [0:LOG4N_BITS-1];
-logic                  bfii_b_val [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfii_b_re_out [0:LOG4N_BITS-1];
-logic [DATA_WIDTH-1:0] bfii_b_im_out [0:LOG4N_BITS-1];
+logic [0:LOG4N_BITS]  [DATA_WIDTH-1:0] bfi_a_re_in;
+logic [0:LOG4N_BITS]  [DATA_WIDTH-1:0] bfi_a_im_in;
+logic [0:LOG4N_BITS-1]                 bfi_a_val;
+logic [0:LOG4N_BITS-1]                 bfi_b_val;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfi_b_re_out;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfi_b_im_out;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_a_re_in;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_a_im_in;
+logic [0:LOG4N_BITS-1]                 bfii_b_val;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_re_out;
+logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_im_out;
 
 // Control Unit
 log2n_cntr #(

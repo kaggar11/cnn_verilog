@@ -26,10 +26,11 @@ module bfi # (
 localparam BUF_SIZE = N_POINTS/(1<<(2*STAGE+1)); // Total FIFO/Buffer Size Needed
 localparam BUF_BITS = $clog2(BUF_SIZE);
 
-logic [DATA_WIDTH-1:0] feedback_regs_re [0:BUF_SIZE-1];
-logic [DATA_WIDTH-1:0] feedback_regs_im [0:BUF_SIZE-1];
+logic [0:BUF_SIZE-1][DATA_WIDTH-1:0] feedback_regs_re;
+logic [0:BUF_SIZE-1][DATA_WIDTH-1:0] feedback_regs_im;
 
 logic [BUF_BITS:0] cntr_write_q, cntr_read_q;
+logic cntr_wr_en, cntr_wr_en_q;
 logic cntr_wr_msb, cntr_wr_msb_re, cntr_rd_en;
 
 always_ff @(posedge clk, negedge rst) begin
@@ -42,46 +43,48 @@ always_ff @(posedge clk, negedge rst) begin
       if (control_bit) begin
          b_re <= a_re + feedback_regs_re[cntr_read_q[BUF_BITS-1:0]];
          b_im <= a_im + feedback_regs_im[cntr_read_q[BUF_BITS-1:0]];
-         feedback_regs_re[cntr_write_q[BUF_BITS-1:0]] <= a_re - feedback_regs_re[cntr_read_q[BUF_BITS-1:0]];
-         feedback_regs_im[cntr_write_q[BUF_BITS-1:0]] <= a_im - feedback_regs_im[cntr_read_q[BUF_BITS-1:0]];
+         if (cntr_wr_en || cntr_wr_en_q) begin
+            feedback_regs_re[cntr_write_q[BUF_BITS-1:0]] <= a_re - feedback_regs_re[cntr_read_q[BUF_BITS-1:0]];
+            feedback_regs_im[cntr_write_q[BUF_BITS-1:0]] <= a_im - feedback_regs_im[cntr_read_q[BUF_BITS-1:0]];
+         end
       end else begin
          b_re <= feedback_regs_re[cntr_read_q[BUF_BITS-1:0]];
          b_im <= feedback_regs_im[cntr_read_q[BUF_BITS-1:0]];
-         feedback_regs_re[cntr_write_q[BUF_BITS-1:0]] <= a_re;
-         feedback_regs_im[cntr_write_q[BUF_BITS-1:0]] <= a_im;
+         if (cntr_wr_en || cntr_wr_en_q) begin
+            feedback_regs_re[cntr_write_q[BUF_BITS-1:0]] <= a_re;
+            feedback_regs_im[cntr_write_q[BUF_BITS-1:0]] <= a_im;
+         end
       end
    end
 end
 
+assign cntr_wr_en = en & ~(&cntr_write_q);
 assign cntr_wr_msb_re = cntr_write_q[BUF_BITS] && ~cntr_wr_msb;
 
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       cntr_wr_msb  <= 1'b0;
       cntr_rd_en   <= 1'b0;
+      cntr_wr_en_q <= 1'b0;
    end else begin
       cntr_wr_msb <= cntr_write_q[BUF_BITS];
-      if (cntr_wr_msb_re)
-         cntr_rd_en <= ~cntr_rd_en;
+      cntr_wr_en_q <= cntr_wr_en;
+      
+      if (cntr_wr_msb_re)    cntr_rd_en <= 1'b1;
+      else if (&cntr_read_q) cntr_rd_en <= 1'b0;
    end
 end
-
 
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
       cntr_write_q <= 'h0;
       cntr_read_q  <= 'h0;
    end else if (en) begin
-      if (&cntr_write_q)
-         cntr_write_q <= 'h0;
-      else
-         cntr_write_q <= cntr_write_q + 1'b1;
+      if (&cntr_write_q) cntr_write_q <= cntr_write_q;
+      else               cntr_write_q <= cntr_write_q + 1'b1;
       
-      if (&cntr_read_q) begin
-         cntr_read_q <= 'h0;
-      end else if (cntr_rd_en) begin // MSB high means the buffer is full, start reading
-         cntr_read_q  <= cntr_read_q + 1'b1;
-      end
+      if (&cntr_read_q)    cntr_read_q <= cntr_read_q;
+      else if (cntr_rd_en) cntr_read_q <= cntr_read_q + 1'b1;
    end
 end
 
