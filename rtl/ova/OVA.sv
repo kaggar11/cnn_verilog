@@ -42,7 +42,7 @@ module OVA #(parameter num_block_root=4, size=9, overlap=3)(
           end 
       end
     else if(cyclenumber<(num_block_root*num_block_root)) begin 
-      overlap_daa2=overlap_data;
+      overlap_data2=overlap_data;
       overlap_data2[(row*(size-overlap))+:size][(col*(size-overlap))+:size]=matrixAdd(overlap_data[(row*(size-overlap))+:size][(col*(size-overlap))+:size],blocks_in[clkcycle]);
     end 
   end 
