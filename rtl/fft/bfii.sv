@@ -24,6 +24,7 @@ module bfii # (
    output logic [DATA_WIDTH-1:0] b_im                    // imaginary part of output data
 );
 
+localparam CNTR_BITS = $clog2(N_POINTS);
 localparam BUF_SIZE = N_POINTS/(1<<(2*STAGE+2)); // Total FIFO/Buffer Size Needed
 localparam BUF_BITS = $clog2(BUF_SIZE+1);
 localparam MAX_BUF_BIT = $clog2(BUF_BITS-1);
@@ -35,7 +36,7 @@ logic [DATA_WIDTH-1:0] h1, h2;
 
 logic control_cc;
 
-logic [BUF_BITS:0] cntr_write_q, cntr_read_q;
+logic [CNTR_BITS-1:0] cntr_write_q, cntr_read_q;
 logic cntr_wr_en, cntr_wr_en_q;
 logic cntr_wr_msb, cntr_wr_msb_re, cntr_rd_en;
 

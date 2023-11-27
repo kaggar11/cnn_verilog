@@ -23,13 +23,14 @@ module bfi # (
    output logic [DATA_WIDTH-1:0] b_im                    // imaginary part of output data
 );
 
+localparam CNTR_BITS = $clog2(N_POINTS);
 localparam BUF_SIZE = N_POINTS/(1<<(2*STAGE+1)); // Total FIFO/Buffer Size Needed
 localparam BUF_BITS = $clog2(BUF_SIZE);
 
 logic [0:BUF_SIZE-1][DATA_WIDTH-1:0] feedback_regs_re;
 logic [0:BUF_SIZE-1][DATA_WIDTH-1:0] feedback_regs_im;
 
-logic [BUF_BITS:0] cntr_write_q, cntr_read_q;
+logic [CNTR_BITS-1:0] cntr_write_q, cntr_read_q;
 logic cntr_wr_en, cntr_wr_en_q;
 logic cntr_wr_msb, cntr_wr_msb_re, cntr_rd_en;
 

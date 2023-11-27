@@ -41,7 +41,9 @@ logic [0:LOG4N_BITS-1]                 bfii_b_val;
 logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_re_out;
 logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_im_out;
 
-logic control_bus2, control_bus3;
+logic [0:LOG4N_BITS] control_bus0, control_bus1;
+logic control_bus0_q, control_bus1_q;
+logic control_bus0_2q, control_bus1_2q;
 
 // Control Unit
 log2n_cntr #(
@@ -53,20 +55,30 @@ log2n_cntr #(
   .control_bus     (control_bus)
 );
 
+
+// hardcoding the delays according to a 16-point fft for now. 
+// TODO: this delays needs to be parameterized in future
 always_ff @(posedge clk, negedge rst) begin
    if (~rst) begin
-      control_bus2 <= 1'b0;
-      control_bus3 <= 1'b0;
+      control_bus0 <= 1'b0;
+      control_bus1 <= 1'b0;
    end else begin
-      control_bus3 <= control_bus[3];
-      control_bus2 <= control_bus[2];
+      control_bus0[0] <= control_bus[3];
+      control_bus1[0] <= control_bus[2];
+      
+      control_bus0_q  <= control_bus[0];
+      control_bus1_q  <= control_bus[1];
+      control_bus0_2q <= control_bus0_q;
+      control_bus1_2q <= control_bus1_q;
+      control_bus0[1] <= control_bus0_2q;
+      control_bus1[1] <= control_bus1_2q;
    end
 end
 
 // RAM to lookup for twiddle factors
 // input = control_bus
 // output = ram output (both sin and cos)
-
+// TODO (Rohon): instantiate the module to read the ram values here
 
 
 always_comb begin
@@ -112,8 +124,8 @@ generate
         .en              (en && bfi_b_val[stage]),
         // .control1_bit    (control_bus[LOG2N_BITS-1-2*stage]),
         // .control2_bit    (control_bus[LOG2N_BITS-1-2*stage-1]),
-        .control1_bit    (control_bus3),
-        .control2_bit    (control_bus2),
+        .control1_bit    (control_bus0[stage]),
+        .control2_bit    (control_bus1[stage]),
         .a_re            (bfii_a_re_in[stage]),
         .a_im            (bfii_a_im_in[stage]),
         .b_val           (bfii_b_val[stage]),
