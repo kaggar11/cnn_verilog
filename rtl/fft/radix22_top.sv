@@ -41,6 +41,8 @@ logic [0:LOG4N_BITS-1]                 bfii_b_val;
 logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_re_out;
 logic [0:LOG4N_BITS-1][DATA_WIDTH-1:0] bfii_b_im_out;
 
+logic control_bus2, control_bus3;
+
 // Control Unit
 log2n_cntr #(
   .LOG2N_BITS      (LOG2N_BITS)
@@ -50,6 +52,16 @@ log2n_cntr #(
   .en              (en),
   .control_bus     (control_bus)
 );
+
+always_ff @(posedge clk, negedge rst) begin
+   if (~rst) begin
+      control_bus2 <= 1'b0;
+      control_bus3 <= 1'b0;
+   end else begin
+      control_bus3 <= control_bus[3];
+      control_bus2 <= control_bus[2];
+   end
+end
 
 // RAM to lookup for twiddle factors
 // input = control_bus
@@ -98,8 +110,10 @@ generate
         .clk             (clk),
         .rst             (rst),
         .en              (en && bfi_b_val[stage]),
-        .control1_bit    (control_bus[LOG2N_BITS-1-2*stage]),
-        .control2_bit    (control_bus[LOG2N_BITS-1-2*stage-1]),
+        // .control1_bit    (control_bus[LOG2N_BITS-1-2*stage]),
+        // .control2_bit    (control_bus[LOG2N_BITS-1-2*stage-1]),
+        .control1_bit    (control_bus3),
+        .control2_bit    (control_bus2),
         .a_re            (bfii_a_re_in[stage]),
         .a_im            (bfii_a_im_in[stage]),
         .b_val           (bfii_b_val[stage]),

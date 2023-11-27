@@ -66,12 +66,15 @@ always_ff @(posedge clk, negedge rst) begin
       cntr_wr_msb  <= 1'b0;
       cntr_rd_en   <= 1'b0;
       cntr_wr_en_q <= 1'b0;
+      b_val <= 1'b0;
    end else begin
       cntr_wr_msb <= cntr_write_q[BUF_BITS];
       cntr_wr_en_q <= cntr_wr_en;
       
-      if (cntr_wr_msb_re)    cntr_rd_en <= 1'b1;
-      else if (&cntr_read_q) cntr_rd_en <= 1'b0;
+      if (cntr_wr_msb_re) begin
+         cntr_rd_en <= 1'b1;
+         b_val <= 1'b1;
+      end else if (&cntr_read_q) cntr_rd_en <= 1'b0;
    end
 end
 
@@ -88,6 +91,6 @@ always_ff @(posedge clk, negedge rst) begin
    end
 end
 
-assign b_val = cntr_rd_en;
+// assign b_val = cntr_rd_en;
 
 endmodule

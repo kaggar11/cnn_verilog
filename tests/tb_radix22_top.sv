@@ -83,6 +83,12 @@ module tb_radix22_top();
       $display("[INFO] time:%0d, u_bfii[0].BUF_SIZE:%0d", $time, x_radix22_top.genblk1[0].u_bfii.BUF_SIZE);
       $display("[INFO] time:%0d, u_bfi[1].BUF_SIZE:%0d", $time, x_radix22_top.genblk1[1].u_bfi.BUF_SIZE);
       $display("[INFO] time:%0d, u_bfii[1].BUF_SIZE:%0d", $time, x_radix22_top.genblk1[1].u_bfii.BUF_SIZE);
+      $display("[INFO] time:%0d, u_bfi[0].BUF_BITS:%0d", $time, x_radix22_top.genblk1[0].u_bfi.BUF_BITS);
+      $display("[INFO] time:%0d, u_bfii[0].BUF_BITS:%0d", $time, x_radix22_top.genblk1[0].u_bfii.BUF_BITS);
+      $display("[INFO] time:%0d, u_bfi[1].BUF_BITS:%0d", $time, x_radix22_top.genblk1[1].u_bfi.BUF_BITS);
+      $display("[INFO] time:%0d, u_bfii[1].BUF_BITS:%0d", $time, x_radix22_top.genblk1[1].u_bfii.BUF_BITS);
+      $display("[INFO] time:%0d, u_bfii[0].MAX_BUF_BIT:%0d", $time, x_radix22_top.genblk1[0].u_bfii.MAX_BUF_BIT);
+      $display("[INFO] time:%0d, u_bfii[1].MAX_BUF_BIT:%0d", $time, x_radix22_top.genblk1[1].u_bfii.MAX_BUF_BIT);
    end
 
    initial begin
