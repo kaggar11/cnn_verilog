@@ -8,8 +8,10 @@
 /////////////////////////////////////////////////
 
 module radix22_top # (
-   parameter DATA_WIDTH=16,
-   parameter N_POINTS=16
+   parameter ADDR_WIDTH = 9,
+   parameter ROM_WIDTH  = 18,
+   parameter DATA_WIDTH = 16,
+   parameter N_POINTS   = 16
 ) (
    input                   clk,
    input                   rst,
@@ -25,10 +27,10 @@ localparam LN_N = $ln(N_POINTS);
 localparam LN_4 = $ln(4);
 localparam LOG4N_BITS = LN_N/LN_4; // log4(N) = ln(N)/ln(4) from log base change rule
 
-localparam SIN_THETA = 16'h1234;
-localparam COS_THETA = 16'h5678;
 
 logic [LOG2N_BITS-1:0] control_bus;
+logic [0:LOG4N_BITS-1][ROM_WIDTH-1:0] sin_theta;
+logic [0:LOG4N_BITS-1][ROM_WIDTH-1:0] cos_theta;
 logic [0:LOG4N_BITS]  [DATA_WIDTH-1:0] bfi_a_re_in;
 logic [0:LOG4N_BITS]  [DATA_WIDTH-1:0] bfi_a_im_in;
 logic [0:LOG4N_BITS-1]                 bfi_a_val;
@@ -74,11 +76,6 @@ always_ff @(posedge clk, negedge rst) begin
       control_bus1[1] <= control_bus1_2q;
    end
 end
-
-// RAM to lookup for twiddle factors
-// input = control_bus
-// output = ram output (both sin and cos)
-// TODO (Rohon): instantiate the module to read the ram values here
 
 
 always_comb begin
@@ -133,6 +130,22 @@ generate
         .b_im            (bfii_b_im_out[stage])
       );
       
+      // RAM to lookup for twiddle factors
+      // input = control_bus
+      // output = ram output (both sin and cos)
+      // TODO (Rohon): instantiate the module to read the ram values here
+      rom #(
+         .ADDR_WIDTH    (ADDR_WIDTH),
+         .DATA_WIDTH    (ROM_WIDTH)
+      ) u_rom (
+         .clk           (clk),
+         .rst           (rst),
+         .rd_en         (bfii_b_val[stage]),
+         .address       ({5'b0,control_bus}),
+         .out_real      (cos_theta[stage]),
+         .out_imag      (sin_theta[stage])
+      );
+      
       // TFM unit initialization
       tfm #(
          .DATA_WIDTH     (DATA_WIDTH)
@@ -140,8 +153,8 @@ generate
         .clk             (clk),
         .rst             (rst),
         .en              (en && bfii_b_val[stage]),
-        .sin_theta       (SIN_THETA),
-        .cos_theta       (COS_THETA),
+        .sin_theta       (sin_theta[stage]),
+        .cos_theta       (cos_theta[stage]),
         .data_re         (bfii_b_re_out[stage]),
         .data_im         (bfii_b_im_out[stage]),
         .out_val         (bfi_a_val[stage+1]),
