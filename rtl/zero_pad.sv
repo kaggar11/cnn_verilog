@@ -19,9 +19,9 @@ module zero_pad #(parameter SIZE=5) (input [31:0] array1[0:(SIZE-1)][0:(SIZE-1)]
   always @(posedge clk) 
   begin 
   if(reset) begin 
-    for(row=0;row<SIZE;row=row+1) begin 
-     for(col=0;col<SIZE;col=col+1) begin 
-       array2[row][col]<='d0;
+   for(row1=0;row1<SIZE;row1=row1+1) begin 
+    for(col1=0;col1<SIZE;col1=col1+1) begin 
+     array2[row1][col1]<='d0;
      end 
     end 
       end
