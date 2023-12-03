@@ -148,7 +148,8 @@ generate
       
       // TFM unit initialization
       tfm #(
-         .DATA_WIDTH     (DATA_WIDTH)
+         .DATA_WIDTH     (DATA_WIDTH),
+         .ROM_WIDTH      (ROM_WIDTH)
       ) u_tfm (
         .clk             (clk),
         .rst             (rst),
