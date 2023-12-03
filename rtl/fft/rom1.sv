@@ -29,7 +29,7 @@ logic [0:2**ADDR_WIDTH-1][DATA_WIDTH-1:0] rom_imag;
 
  //  always @* begin		                  // load from external text file
 
-  assign ram_real={'b010000000000000000,
+  assign rom_real={'b010000000000000000,
 'b001111111111111011,
 'b001111111111101100,
 'b001111111111010011,
