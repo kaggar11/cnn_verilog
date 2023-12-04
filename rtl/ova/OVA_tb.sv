@@ -1,12 +1,4 @@
-// Code your testbench here
-// or browse Examples
 
-//Samarth Singh <ssing258@asu.edu>
-//Wed, Nov 29, 1:10 PM (4 days ago)
-//to me
-
-// Code your testbench here
-// or browse Examples
 
 
 `timescale 1ns / 1ps
