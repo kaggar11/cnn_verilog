@@ -8,8 +8,9 @@
 /////////////////////////////////////////////////
 
 module tfm # (
-   parameter DATA_WIDTH = 16,
-   parameter ROM_WIDTH  = 18
+   parameter FFT_OR_IFFT = "FFT",
+   parameter DATA_WIDTH  = 16,
+   parameter ROM_WIDTH   = 18
 )(
    input clk,
    input rst,
@@ -36,8 +37,13 @@ assign sin_re_c = sin_theta*data_re;
 assign cos_im_c = cos_theta*data_im;
 assign cos_re_c = cos_theta*data_re;
 
-assign add_re_c = sin_re_q - cos_im_q;
-assign sub_im_c = sin_im_q + cos_re_q;
+if (FFT_OR_IFFT=="FFT") begin
+   assign add_re_c = sin_re_q - cos_im_q;
+   assign sub_im_c = sin_im_q + cos_re_q;
+end else if (FFT_OR_IFFT == "IFFT") begin
+   assign add_re_c = sin_re_q + cos_im_q;
+   assign sub_im_c = sin_im_q - cos_re_q;
+end
 
 always_ff@(posedge clk) begin
    en_q <= en;

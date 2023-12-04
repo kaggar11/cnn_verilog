@@ -8,10 +8,11 @@
 /////////////////////////////////////////////////
 
 module radix22_top # (
-   parameter ADDR_WIDTH = 9,
-   parameter ROM_WIDTH  = 18,
-   parameter DATA_WIDTH = 16,
-   parameter N_POINTS   = 16
+   parameter FFT_OR_IFFT = "FFT",
+   parameter ADDR_WIDTH  = 9,
+   parameter ROM_WIDTH   = 18,
+   parameter DATA_WIDTH  = 16,
+   parameter N_POINTS    = 16
 ) (
    input                   clk,
    input                   rst,
@@ -148,6 +149,7 @@ generate
       
       // TFM unit initialization
       tfm #(
+         .FFT_OR_IFFT    (FFT_OR_IFFT),
          .DATA_WIDTH     (DATA_WIDTH),
          .ROM_WIDTH      (ROM_WIDTH)
       ) u_tfm (
