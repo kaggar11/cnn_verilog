@@ -29,6 +29,7 @@ module zero_pad #(parameter SIZE=5) (input [31:0] array1[0:(SIZE-1)][0:(SIZE-1)]
   if(reset) begin 
     for(row1=0;row1<((2*(SIZE-1))+1);row1=row1+1) begin 
       for(col1=0;col1<((2*(SIZE-1))+1);col1=col1+1) begin 
+        //array2[row1][col1]<=array1[row1][col1];
         array2[row1][col1]<='d0;
      end 
     end 
@@ -37,4 +38,5 @@ module zero_pad #(parameter SIZE=5) (input [31:0] array1[0:(SIZE-1)][0:(SIZE-1)]
       array2<=array2b;
     end
   end 
+endmodule 
 endmodule 
