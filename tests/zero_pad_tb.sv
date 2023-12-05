@@ -3,7 +3,7 @@ module zero_pad_tb;
 
 // Inputs
        
-  		parameter size=2;
+  		parameter size=5;
   logic [31:0] array1[0:(size-1)][0:(size-1)];
   logic [31:0] array2[0:(2*(size-1))][0:(2*(size-1))];
   logic clk;
@@ -38,11 +38,12 @@ module zero_pad_tb;
             @(posedge clk);
             reset=0;
           en=1;
+          //@(posedge clk);
+       //  reset=0;
+       //      en=1;
           @(posedge clk);
-     //     reset=0;
-    //         en=1;
-       //   @(posedge clk);
           $display("gfgfgf");
+             #900;
           for(row=0;row<outputsize;row=row+1) begin 
             for(col=0;col<outputsize;col=col+1)  begin 
              // $display("This is row=%0d and col=%0d",row,col);
@@ -50,7 +51,6 @@ module zero_pad_tb;
             end 
           end 
           //  $finish;
-          #90000;
           $finish;
            end
   
