@@ -44,34 +44,73 @@ assign control_cc = (~control1_bit) & control2_bit;
 
 assign muxim_real = control_cc ? a_im : a_re;
 assign muxim_imag = control_cc ? a_re : a_im;
-assign h1 = (control_cc && en) ? muxim_imag - feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]]
-                               : muxim_imag + feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
-assign h2 = (control_cc && en) ? muxim_imag + feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]]
-                               : muxim_imag - feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
 
-always_ff @(posedge clk, negedge rst) begin
-   if (~rst) begin
-      feedback_regs_re <= '{default: 'h0};
-      feedback_regs_im <= '{default: 'h0};
-      b_re  <= 'h0;
-      b_im  <= 'h0;
-   end else if (en) begin
-      if (control2_bit) begin
-         b_re <= muxim_real + feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
-         b_im <= h1;
-         if (cntr_wr_en) begin
-            feedback_regs_re[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_real - feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
-            feedback_regs_im[cntr_write_q[MAX_BUF_BIT:0]] <= h2;
-         end
-      end else begin
-         b_re <= feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
-         b_im <= feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
-         if (cntr_wr_en) begin
-            feedback_regs_re[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_real;
-            feedback_regs_im[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_imag;
+// logic to read/write data will be different when the buffer size 
+// is zero. since we will only have a size-one buffer, we always 
+// read/write to index 0.
+if (MAX_BUF_BIT==0) begin
+   assign h1 = (control_cc && en) ? muxim_imag - feedback_regs_im[0]
+                                 : muxim_imag + feedback_regs_im[0];
+   assign h2 = (control_cc && en) ? muxim_imag + feedback_regs_im[0]
+                                 : muxim_imag - feedback_regs_im[0];
+
+
+   always_ff @(posedge clk, negedge rst) begin
+      if (~rst) begin
+         feedback_regs_re <= '{default: 'h0};
+         feedback_regs_im <= '{default: 'h0};
+         b_re  <= 'h0;
+         b_im  <= 'h0;
+      end else if (en) begin
+         if (control2_bit) begin
+            b_re <= muxim_real + feedback_regs_re[0];
+            b_im <= h1;
+            if (cntr_wr_en) begin
+               feedback_regs_re[0] <= muxim_real - feedback_regs_re[0];
+               feedback_regs_im[0] <= h2;
+            end
+         end else begin
+            b_re <= feedback_regs_re[0];
+            b_im <= feedback_regs_im[0];
+            if (cntr_wr_en) begin
+               feedback_regs_re[0] <= muxim_real;
+               feedback_regs_im[0] <= muxim_imag;
+            end
          end
       end
    end
+
+end else begin
+   assign h1 = (control_cc && en) ? muxim_imag - feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]]
+                                 : muxim_imag + feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
+   assign h2 = (control_cc && en) ? muxim_imag + feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]]
+                                 : muxim_imag - feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
+
+   always_ff @(posedge clk, negedge rst) begin
+      if (~rst) begin
+         feedback_regs_re <= '{default: 'h0};
+         feedback_regs_im <= '{default: 'h0};
+         b_re  <= 'h0;
+         b_im  <= 'h0;
+      end else if (en) begin
+         if (control2_bit) begin
+            b_re <= muxim_real + feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
+            b_im <= h1;
+            if (cntr_wr_en) begin
+               feedback_regs_re[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_real - feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
+               feedback_regs_im[cntr_write_q[MAX_BUF_BIT:0]] <= h2;
+            end
+         end else begin
+            b_re <= feedback_regs_re[cntr_read_q[MAX_BUF_BIT:0]];
+            b_im <= feedback_regs_im[cntr_read_q[MAX_BUF_BIT:0]];
+            if (cntr_wr_en) begin
+               feedback_regs_re[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_real;
+               feedback_regs_im[cntr_write_q[MAX_BUF_BIT:0]] <= muxim_imag;
+            end
+         end
+      end
+   end
+
 end
 
 assign cntr_wr_en = en & ~(&cntr_write_q);

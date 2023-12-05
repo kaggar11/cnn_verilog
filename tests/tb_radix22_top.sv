@@ -14,6 +14,7 @@ module tb_radix22_top();
   logic en;
   logic [DATA_WIDTH-1:0] a_re;
   logic [DATA_WIDTH-1:0] a_im;
+  logic                  b_val;
   logic [DATA_WIDTH-1:0] b_re;
   logic [DATA_WIDTH-1:0] b_im;
   
@@ -27,6 +28,7 @@ module tb_radix22_top();
     .en              ( en        ), // 
     .a_re            ( a_re      ), // 
     .a_im            ( a_im      ), // 
+    .b_val           ( b_val     ), // 
     .b_re            ( b_re      ), // 
     .b_im            ( b_im      )  // 
   );
@@ -71,8 +73,10 @@ module tb_radix22_top();
    initial begin
       forever begin
       @(posedge dut_clk);
-         $display("[REAL_OUT] time:%0d, b_re:%h",$time, b_re);
-         $display("[IMAG_OUT] time:%0d, b_im:%h",$time, b_im);
+         if (b_val) begin
+            $display("[REAL_OUT] time:%0d, b_re:%h",$time, b_re);
+            $display("[IMAG_OUT] time:%0d, b_im:%h",$time, b_im);
+         end
       end
    end
 

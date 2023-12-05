@@ -4,12 +4,6 @@ This repository is created to develop a convolution mechanism to be deployed on 
 
 Currently, this code doesn't consider padding and striding. The implementation is just a basic implementation where it takes an image and a kernel as inputs. It then finds the windows from the image of the same size as kernels and then performs a convolution on it, which is just a multiplication and an addition of all the multiplied results.
 
-The current TODO list includes:
-- [x] Implement Python code to generate input stimulus
-- [ ] Add support for padding and stride
-- [ ] Develop a testbench to compare the outputs
-- [ ] Create and test a Neural Network Model based on it
-
 The direction of this repo has pivoted. ***This repo will now focus on development of an FFT-OVA based CNN hardware accelerator.*** [[1]](#1) [[2]](#2) [[3]](#3)
 
 ## Dataflow for Standard Convolution
@@ -24,13 +18,19 @@ MAC operation is then performed on the two matrices shown in the figure below.
 
 ![MAC_OPS](./docs/convolution_dataflow.jpg)
 
+The current TODO list includes:
+- [x] Implement Python code to generate input stimulus
+- [ ] Add support for padding and stride
+- [ ] Develop a testbench to compare the outputs
+- [ ] Create and test a Neural Network Model based on it
+
 ## Dataflow for FFT-OVA based Convolution
 
 This section explains the architecture of the Radix-2^2 FFT design.[[2]](#2).
 
 ![RAD](./docs/fft_arch.jpg)
 
-The architecture has log4(N) stages with each stages having two butterfly structures.
+The architecture has log_4(N) stages with each stages having two butterfly structures.
 
 The first butterfly structure is explained below.
 
@@ -43,6 +43,13 @@ The figure shows the Butterfly-II structure to perform multiplications with '-j'
 The waveform below shows the dataflow in a butterfly-1 structure for an 8-point FFT.
 
 ![BFI_WF](./docs/bfi_wf.png)
+
+The current TODO list includes:
+- [x] Get the FFT blocks working
+- [x] Get other communication blocks workings that will input/output the data in correct format
+- [ ] Point-wise multiplication RTL code
+- [ ] Integrate all the modules and check sanity
+- [ ] Test and verify by comparing the outputs with a similar python/MATLAB implementation at each stage
 
 ## Running Simulation
 

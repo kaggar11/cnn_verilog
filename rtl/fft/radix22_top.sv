@@ -19,6 +19,7 @@ module radix22_top # (
    input                   en,
    input  [DATA_WIDTH-1:0] a_re,
    input  [DATA_WIDTH-1:0] a_im,
+   output                  b_val,
    output [DATA_WIDTH-1:0] b_re,
    output [DATA_WIDTH-1:0] b_im
 );
@@ -27,7 +28,9 @@ localparam LOG2N_BITS = $clog2(N_POINTS);
 localparam LN_N = $ln(N_POINTS);
 localparam LN_4 = $ln(4);
 localparam LOG4N_BITS = LN_N/LN_4; // log4(N) = ln(N)/ln(4) from log base change rule
-
+localparam ROM_BITS_ADJUST = ADDR_WIDTH - LOG2N_BITS; // The maximum supported N-points based on 
+                                                      // our ROM is 512. Currently, since we are only
+                                                      // doing 16-points, this needs to read the adjusted addresses.
 
 logic [LOG2N_BITS-1:0] control_bus;
 logic [0:LOG4N_BITS-1][ROM_WIDTH-1:0] sin_theta;
@@ -69,8 +72,10 @@ always_ff @(posedge clk, negedge rst) begin
       control_bus0[0] <= control_bus[3];
       control_bus1[0] <= control_bus[2];
       
-      control_bus0_q  <= control_bus[0];
-      control_bus1_q  <= control_bus[1];
+      // Bug Fix: logically here the control0 should
+      // have double the freq than the control2.
+      control_bus0_q  <= control_bus[1];
+      control_bus1_q  <= control_bus[0];
       control_bus0_2q <= control_bus0_q;
       control_bus1_2q <= control_bus1_q;
       control_bus0[1] <= control_bus0_2q;
@@ -142,7 +147,7 @@ generate
          .clk           (clk),
          .rst           (rst),
          .rd_en         (bfii_b_val[stage]),
-         .address       ({5'b0,control_bus}),
+         .address       ({control_bus,ROM_BITS_ADJUST{1'b0}}),
          .out_real      (cos_theta[stage]),
          .out_imag      (sin_theta[stage])
       );
@@ -168,7 +173,8 @@ generate
 endgenerate
 
 // output assignment. No twiddle factor multiply in the last stage.
-assign b_re = bfii_b_re_out[LOG4N_BITS-1];
-assign b_im = bfii_b_im_out[LOG4N_BITS-1];
+assign b_val = bfi_a_val[LOG4N_BITS-1];
+assign b_re  = bfi_a_re_in[LOG4N_BITS-1];
+assign b_im  = bfi_a_im_in[LOG4N_BITS-1];
 
 endmodule
