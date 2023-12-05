@@ -36,9 +36,12 @@ module zero_pad_tb;
     		    end
           $display("Hellrtetretertreo");
             @(posedge clk);
-             reset=0;
-             en=1;
+            reset=0;
+          en=1;
           @(posedge clk);
+     //     reset=0;
+    //         en=1;
+       //   @(posedge clk);
           $display("gfgfgf");
           for(row=0;row<outputsize;row=row+1) begin 
             for(col=0;col<outputsize;col=col+1)  begin 
