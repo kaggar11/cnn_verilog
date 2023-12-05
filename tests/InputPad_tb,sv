@@ -9,7 +9,8 @@ module InputPad_tb;
   		parameter filter_size=FILTER_SIZE;
  // logic [31:0] outputsize1;
   //parameter outputsize= SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE);
-  parameter outputsize= SIZE-((SIZE%FILTER_SIZE)-(FILTER_SIZE));
+ // parameter outputsize= SIZE-((SIZE%FILTER_SIZE)-(FILTER_SIZE));
+  parameter outputsize=SIZE+(((FILTER_SIZE-(SIZE%FILTER_SIZE)))%FILTER_SIZE);
   //arameter outputsize=SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE);
   logic [31:0] array1[0:(SIZE-1)][0:(SIZE-1)];
   logic [31:0] array2[0:(outputsize-1)][0:(outputsize-1)];
@@ -30,7 +31,7 @@ module InputPad_tb;
 		initial begin
 // Initialize Inputs
           $display("Starting ghfhgfhgfh");
-          
+          //$display("This is outputsize:%0d",outputsize);
           //$finish;
 			clk = 0;
 			en = 0;
