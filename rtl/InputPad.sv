@@ -1,11 +1,11 @@
 // Code your design here
 `timescale 1ns/1ps
-module InputPad #(parameter SIZE=5, FILTER_SIZE=3) (input [31:0] array1[0:(SIZE-1)][0:(SIZE-1)],output logic [31:0] array2[0:(SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE)-1)][0:(SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE)-1)],input clk,input en,input reset);
+module InputPad #(parameter SIZE=5, FILTER_SIZE=3) (input [31:0] array1[0:(SIZE-1)][0:(SIZE-1)],output logic [31:0] array2[0:((SIZE+(((FILTER_SIZE-(SIZE%FILTER_SIZE)))%FILTER_SIZE))-1)][0:((SIZE+(((FILTER_SIZE-(SIZE%FILTER_SIZE)))%FILTER_SIZE))-1)],input clk,input en,input reset);
  genvar row;
  genvar col;
    logic [31:0] outputsize1;
-  parameter outputsize=SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE);
-  
+  //parameter outputsize=SIZE+FILTER_SIZE-(SIZE%FILTER_SIZE);
+  parameter outputsize=SIZE+(((FILTER_SIZE-(SIZE%FILTER_SIZE)))%FILTER_SIZE);
   logic [31:0] array2b[0:(outputsize-1)][0:(outputsize-1)];
   for( row=0;row<SIZE;row=row+1) begin 
     for( col=0;col<outputsize;col=col+1) begin 
