@@ -24,7 +24,7 @@ module tfm # (
    output logic                  out_val
 );
 
-function [ROM_WIDTH+DATA_WIDTH-2:0] twos_complement
+function [ROM_WIDTH+DATA_WIDTH-2:0] twos_complement;
    input [ROM_WIDTH+DATA_WIDTH-1:0] data;
    begin
       twos_complement = (~data) + 1'b1;
@@ -39,20 +39,24 @@ logic [ROM_WIDTH+DATA_WIDTH-2:0] cos_im_c, cos_im_q;
 logic [ROM_WIDTH+DATA_WIDTH-1:0] add_re_c;
 logic [ROM_WIDTH+DATA_WIDTH-1:0] sub_im_c;
 
-if (sin_theta[ROM_WIDTH-1]) begin
-   assign sin_im_c = twos_complement(sin_theta[ROM_WIDTH-2:0]*data_im);
-   assign sin_re_c = twos_complement(sin_theta[ROM_WIDTH-2:0]*data_re);
-end else begin
-   assign sin_im_c = sin_theta[ROM_WIDTH-2:0]*data_im;
-   assign sin_re_c = sin_theta[ROM_WIDTH-2:0]*data_re;
+always_comb begin
+   if (sin_theta[ROM_WIDTH-1]) begin
+      sin_im_c = twos_complement(sin_theta[ROM_WIDTH-2:0]*data_im);
+      sin_re_c = twos_complement(sin_theta[ROM_WIDTH-2:0]*data_re);
+   end else begin
+      sin_im_c = sin_theta[ROM_WIDTH-2:0]*data_im;
+      sin_re_c = sin_theta[ROM_WIDTH-2:0]*data_re;
+   end
 end
 
-if (cos_theta[ROM_WIDTH-1]) begin
-   assign cos_im_c = twos_complement(cos_theta[ROM_WIDTH-2:0]*data_im);
-   assign cos_re_c = twos_complement(cos_theta[ROM_WIDTH-2:0]*data_re);
-end else begin
-   assign cos_im_c = cos_theta[ROM_WIDTH-2:0]*data_im;
-   assign cos_re_c = cos_theta[ROM_WIDTH-2:0]*data_re;
+always_comb begin
+   if (cos_theta[ROM_WIDTH-1]) begin
+      cos_im_c = twos_complement(cos_theta[ROM_WIDTH-2:0]*data_im);
+      cos_re_c = twos_complement(cos_theta[ROM_WIDTH-2:0]*data_re);
+   end else begin
+      cos_im_c = cos_theta[ROM_WIDTH-2:0]*data_im;
+      cos_re_c = cos_theta[ROM_WIDTH-2:0]*data_re;
+   end
 end
 
 if (FFT_OR_IFFT=="FFT") begin

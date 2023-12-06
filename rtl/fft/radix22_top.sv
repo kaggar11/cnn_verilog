@@ -147,7 +147,7 @@ generate
          .clk           (clk),
          .rst           (rst),
          .rd_en         (bfii_b_val[stage]),
-         .address       ({control_bus,ROM_BITS_ADJUST{1'b0}}),
+         .address       ({control_bus,{ROM_BITS_ADJUST{1'b0}}}),
          .out_real      (cos_theta[stage]),
          .out_imag      (sin_theta[stage])
       );
