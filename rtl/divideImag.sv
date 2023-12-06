@@ -13,7 +13,7 @@ module divideImag #(parameter SIZE=9,parameter FILTER_SIZE=3)(input clk, input [
   //  assign col=i%size;
     for(j=0;j<FILTER_SIZE;j=j+1) begin 
       for(k=0;k<FILTER_SIZE;k=k+1) begin 
-        assign array2b[i][j][k]=array1[j+((i/FILTER_SIZE)*FILTER_SIZE)][k+((i%FILTER_SIZE)*FILTER_SIZE)];
+        assign array2b[i][j][k]=array1[j+((i/outputsize)*FILTER_SIZE)][k+((i%outputsize)*FILTER_SIZE)];
       end 
     end 
     
